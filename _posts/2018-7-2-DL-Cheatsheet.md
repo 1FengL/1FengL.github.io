@@ -88,6 +88,7 @@ $$Hinge(y, p) = max(0, 1-y\cdot p)$$
 #### 1.3.2 BLEU
 
 ## 2. Optimizers
+![_config.yml]({{ site.baseurl }}/images/dl-cheatsheet/Optimizers.gif)
 ### 2.1 Stochastic gradient desencet
 Batch gradient descent will calculate the gradient of the whole dataset but will perform only one update, hence it can be very slow and hard to control for datasets which are extremely large and dont't fit in the memory. 
 SGD on the other hand performs a parameter update for each training example, it performs one update at a time:
@@ -128,9 +129,44 @@ x += v
 ### 2.4 Adagrad
 Adagrad simply allows the learning rate $$\alpha$$ to adapt based on the parameters. So it makes big updates for infrequent parameters and small updates for frequent parameters. Thus, it is perfect to deal with sparse data.
 It uses a different learning Rate for every parameter θ at a time step based on the past gradients which were computed for that parameter.
-Previously, we performed an update for all parameters $$\theta$$ at once as every parameter used the same learning rate $$\alpha$$
 
+```python
+# Assume the gradient dx and parameter vector x
+cache += dx**2
+x += - learning_rate * dx / (np.sqrt(cache) + eps)
+```
 
+Notice that the variable cache has size equal to the size of the gradient, and keeps track of per-parameter sum of squared gradients. This is then used to normalize the parameter update step, element-wise. Notice that the weights that receive high gradients will have their effective learning rate reduced, while weights that receive small or infrequent updates will have their effective learning rate increased. Amusingly, the square root operation turns out to be very important and without it the algorithm performs much worse. The smoothing term eps (usually set somewhere in range from 1e-4 to 1e-8) avoids division by zero. A downside of Adagrad is that in case of Deep Learning, the monotonic learning rate usually proves too aggressive and stops learning too early.
+
+### 2.5 RMSprop
+RMSprop is a very effective, but currently unpublished adaptive learning rate method. Amusingly, everyone who uses this method in their work currently cites slide 29 of Lecture 6 of Geoff Hinton’s Coursera class. The RMSProp update adjusts the Adagrad method in a very simple way in an attempt to reduce its aggressive, monotonically decreasing learning rate. In particular, it uses a moving average of squared gradients instead, giving:
+
+```python
+cache = decay_rate * cache + (1 - decay_rate) * dx**2
+x += - learning_rate * dx / (np.sqrt(cache) + eps)
+```
+
+Here, decay_rate is a hyperparameter and typical values are [0.9, 0.99, 0.999]. Notice that the x+= update is identical to Adagrad, but the cache variable is a “leaky”. Hence, RMSProp still modulates the learning rate of each weight based on the magnitudes of its gradients, which has a beneficial equalizing effect, but unlike Adagrad the updates do not get monotonically smaller.
+
+### 2.5 Adam
+Adam is a recently proposed update that looks a bit like RMSProp with momentum. The (simplified) update looks as follows:
+
+```python
+m = beta1*m + (1-beta1)*dx
+v = beta2*v + (1-beta2)*(dx**2)
+x += - learning_rate * m / (np.sqrt(v) + eps)
+```
+
+Notice that the update looks exactly as RMSProp update, except the “smooth” version of the gradient m is used instead of the raw (and perhaps noisy) gradient vector dx. Recommended values in the paper are eps = 1e-8, beta1 = 0.9, beta2 = 0.999. In practice Adam is currently recommended as the default algorithm to use, and often works slightly better than RMSProp. However, it is often also worth trying SGD+Nesterov Momentum as an alternative. The full Adam update also includes a bias correction mechanism, which compensates for the fact that in the first few time steps the vectors m,v are both initialized and therefore biased at zero, before they fully “warm up”. With the bias correction mechanism, the update looks as follows:
+
+```python
+# t is your iteration counter going from 1 to infinity
+m = beta1*m + (1-beta1)*dx
+mt = m / (1-beta1**t)
+v = beta2*v + (1-beta2)*(dx**2)
+vt = v / (1-beta2**t)
+x += - learning_rate * mt / (np.sqrt(vt) + eps)
+```
 
 ## 2. techniques
 
