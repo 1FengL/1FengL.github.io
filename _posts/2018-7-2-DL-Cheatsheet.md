@@ -13,7 +13,9 @@ Activation functions are used to add non-linearity to neural networks, or otherw
 
 #### 1.1.1 Sigmoid (Logistic)
 A sigmoid function is an 'S'-shaped curve. Output is between 0 and 1.
+
 $$ S(x) = \frac{1}{1+e^{-x}} $$
+
 ![_config.yml]({{ site.baseurl }}/images/dl-cheatsheet/sigmoid.png)
 Sigmoid function can cause a neural network to get stuck at the training time.
 The gradients of the sigmoid function is calculated as:
@@ -21,17 +23,22 @@ The gradients of the sigmoid function is calculated as:
 
 #### 1.1.2 tanh (hyperbolic tangent)
 Similar to sigmoid, but output is in (-1, 1).
+
 $$tanh(x) = \frac{1 - e^{-2x}}{1+e^{-2x}}$$
 
 #### 1.1.3 ReLUs
 Most commonly used activation function.
+
 $$ReLU(x) = max(0, x)$$
+
 A variation of ReLU is leaky ReLU, making the negative inputs not die out that fast.
 ![_config.yml]({{ site.baseurl }}/images/dl-cheatsheet/relu.jpg)
 
 #### 1.1.4 Softmax
 Softmax function maps an array of scores into an array of possibilities:
+
 $$softmax(x_i) = \frac{e^{x_i}}{\sum_j e^{x_j}}$$
+
 It is called softmax due to that:
 (1) give large scores large possibilities -> max
 (2) still reserve some possibility for low scores -> soft 
@@ -53,17 +60,23 @@ where $$y_c = 1$$ when c is the ground-truth class and 0 otherwise. Thus, it onl
 The gradients of a softmax cross-entropy loss:
 
 $$p = softmax(x)$$
+
 $$CE(y, p) = -\sum_i y_i log(p_i) = -log(p_{gt}) = log\sum e^{x_j}- x_{gt}$$
+
 $$\frac{\partial CE}{x_k} =  \frac{e^{x_k}}{\sum_j e^{x_j}} = p_k, k\neq gt$$
+
 $$\frac{\partial CE}{x_{gt}} =  \frac{e^{x_{gt}}}{\sum_j e^{x_j}} -1 = p_{gt} -1$$
+
 $$\therefore \frac{\partial CE}{x} = p - y$$
 
 #### 1.2.2 MSE Loss
 Mean squared error (MSE) measures the average of the squares of the errors:
+
 $$MSE(p) = \frac{1}{n}\sum_{i}^{n}(p_i - y_i)^2$$
 
 #### 1.2.3 Hinge Loss
 In machine learning , the hinge loss is a loss function used for training classifiers. The hinge loss is used for 'maximum-margin' classification, most notably for support vector machines (SVMs). For an intended output $$y = \pm 1$$ and a classifier score $$p$$, the hinge loss of the prediction $$p$$ is defined as:
+
 $$Hinge(y, p) = max(0, 1-y\cdot p)$$ 
 
 #### 1.2.4 Total Variation Loss
@@ -78,6 +91,7 @@ $$Hinge(y, p) = max(0, 1-y\cdot p)$$
 ### 2.1 Stochastic gradient desencet
 Batch gradient descent will calculate the gradient of the whole dataset but will perform only one update, hence it can be very slow and hard to control for datasets which are extremely large and dont't fit in the memory. 
 SGD on the other hand performs a parameter update for each training example, it performs one update at a time:
+
 $$\theta = \theta - \alpha \nabla J(x_i, y_i, \theta)$$
 
 pros:
@@ -92,14 +106,18 @@ To improve, we can use mini batch gradient descent.
 
 ### 2.2 Momentum
 The high variance oscillations in SGD makes it hard to reach convergence, so a technique called Momentum was invented which accelerates SGD by navigating along the relevant direction and softens the oscillations in irrelevant directions. In other words, all it does is adding a fraction $$\gamma$$ of the update vector of the past step to the current update vector:
-$$V(t) = \gamma V(t-1) - \alpha\cdot dx$$
-$$x += V(t)$$
+
+$$V(t) = \gamma V(t-1) - \alpha\cdot d\theta$$
+
+$$\theta += V(t)$$
+
 where $$\gamma$$ is usually set to 0.9.
 
 ### 2.3 Nesterov Accelerated Gradient
 NAG improves momentum by slowing the gradient down before it reaches the minimum, or otherwise with large momentum, it will overshoot.
-![_config.yml]({{ site.baseurl }}/images/dl-cheatsheet/NAG.png)
+![_config.yml]({{ site.baseurl }}/images/dl-cheatsheet/NAG.jpg)
 Nesterov momentum. Instead of evaluating gradient at the current position (red circle), we know that our momentum is about to carry us to the tip of the green arrow. With Nesterov momentum we therefore instead evaluate the gradient at this "looked-ahead" position:
+
 ```python
 x_ahead = x + mu * v
 # evaluate dx_ahead (the gradient at x_ahead instead of at x)
@@ -108,7 +126,9 @@ x += v
 ```
 
 ### 2.4 Adagrad
-Adagrad simply allows the learning rate $$\alpha$$
+Adagrad simply allows the learning rate $$\alpha$$ to adapt based on the parameters. So it makes big updates for infrequent parameters and small updates for frequent parameters. Thus, it is perfect to deal with sparse data.
+It uses a different learning Rate for every parameter θ at a time step based on the past gradients which were computed for that parameter.
+Previously, we performed an update for all parameters $$\theta$$ at once as every parameter used the same learning rate $$\alpha$$
 
 
 
