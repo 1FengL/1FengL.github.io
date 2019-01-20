@@ -83,12 +83,17 @@ $$Hinge(y, p) = max(0, 1-y\cdot p)$$
 
 #### 1.2.5 Gram Matrix Loss (Style Loss)
 
+
+#### 1.2.6 Focal Loss (Style Loss)
+
+#### 1.2.7 Contextual Loss (Style Loss)
+
+
 ### 1.3 benchmark
 #### 1.3.1 PSNR
 #### 1.3.2 BLEU
 
 ## 2. Optimizers
-![_config.yml]({{ site.baseurl }}/images/dl-cheatsheet/Optimizers.gif)
 ### 2.1 Stochastic gradient desencet
 Batch gradient descent will calculate the gradient of the whole dataset but will perform only one update, hence it can be very slow and hard to control for datasets which are extremely large and dont't fit in the memory. 
 SGD on the other hand performs a parameter update for each training example, it performs one update at a time:
@@ -168,32 +173,58 @@ vt = v / (1-beta2**t)
 x += - learning_rate * mt / (np.sqrt(vt) + eps)
 ```
 
-## 2. techniques
+## 3. techniques
 
-### 2.1 attention mechanism
-#### 2.1.1 soft attention
-#### 2.1.2 hard attention
-### 2.2 batch normalization
-### 2.3 dropout
-### 2.4 beam search
+### 3.1 attention mechanism
+[Show, Attend and Tell: Neural Image Caption Generation with Visual Attention](https://arxiv.org/abs/1502.03044)
 
-## 3. models
-### 3.1 basic structures
-#### 3.1.1 CNN
-#### 3.1.2 RNN
-#### 3.1.3 LSTM
-#### 3.1.4 GRU
-#### 3.1.5 ResNet
+[模型汇总24 - 深度学习中Attention Mechanism详细介绍：原理、分类及应用](https://zhuanlan.zhihu.com/p/31547842)
 
-### 3.2 object detection
-#### 3.2.1 R-CNN
-#### 3.2.2 Fast R-CNN
-#### 3.2.3 Faster R-CNN
-#### 3.2.4 Mask R-CNN
-#### 3.2.5 YOLO
-#### 3.2.6 YOLO2
-#### 3.2.7 SSD
+#### 3.1.1 soft attention
+#### 3.1.2 hard attention
+### 3.2 batch normalization
+[Understanding the backward pass through Batch Normalization Layer](https://kratzert.github.io/2016/02/12/understanding-the-gradient-flow-through-the-batch-normalization-layer.html)
 
-### 3.3 others
-#### 3.3.1 FCN
+[Implementing BatchNorm in Neural Net](https://wiseodd.github.io/techblog/2016/07/04/batchnorm/)
+
+### 3.3 dropout
+[Dropout](https://ml-cheatsheet.readthedocs.io/en/latest/layers.html#dropout)
+
+### 3.4 beam search
+[seq2seq中的beam search算法过程](https://zhuanlan.zhihu.com/p/28048246)
+
+[Beam Search-A Search Strategy])https://hackernoon.com/beam-search-a-search-strategy-5d92fb7817f)
+
+### 3.5 Early Stopping
+[Early stopping](https://www.jianshu.com/p/9ab695d91459)
+
+## 4. Architectures
+### 4.1 Basic Structures
+#### 4.1.1 CNN
+[CS231n notes](http://cs231n.github.io/convolutional-networks/)
+
+#### 4.1.2 RNN
+#### 4.1.3 LSTM
+[Understanding LSTM Networks](http://colah.github.io/posts/2015-08-Understanding-LSTMs/)
+
+#### 4.1.4 GRU
+#### 4.1.5 ResNet
+
+### 4.2 object detection
+#### 4.2.1 R-CNN
+[A Brief History of CNNs in Image Segmentation: From R-CNN to Mask R-CNN](https://blog.athelas.com/a-brief-history-of-cnns-in-image-segmentation-from-r-cnn-to-mask-r-cnn-34ea83205de4)
+
+#### 4.2.2 Fast R-CNN
+#### 4.2.3 Faster R-CNN
+#### 4.2.4 Mask R-CNN
+#### 4.2.5 YOLO
+[Real-time Object Detection with YOLO, YOLOv2 and now YOLOv3](https://medium.com/@jonathan_hui/real-time-object-detection-with-yolo-yolov2-28b1b93e2088)
+
+[YOLO,YOLO2学习](https://www.jianshu.com/p/d792894f1688)
+
+#### 4.2.6 YOLO2
+#### 4.2.7 SSD
+
+### 4.3 others
+#### 4.3.1 FCN
 
